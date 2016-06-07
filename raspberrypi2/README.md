@@ -7,5 +7,5 @@
 $ sudo apt-get install build-essential git vim raspberrypi2-linux-headers
 $ mkdir ~/git
 $ cd ~/git
-$ git clone https://github.com/leemchaehoon/it_expert_linux_device_driver
+$ git clone https://github.com/iamroot12D/it_expert_linux_device_driver
 ```
