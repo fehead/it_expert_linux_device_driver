@@ -42,7 +42,7 @@ ssize_t call_write (struct file *filp, const char *buf, size_t count, loff_t *f_
  * 2.6.38 이상에서 ioctl이 unlocked_ioctl로 변경되었고
  * ioctl 첫번재 매개변수 struct inode * inode 도 제거되었음.
  */
-int call_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
+long call_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
 {
 
     printk( "call ioctl -> cmd : %08X, arg : %08X \n", cmd, arg );
