@@ -25,11 +25,11 @@ int main()
      
         printf( "3) read function call\n");
         
-        ret = read(dev,0x30, 0x31 );              
+        ret = read(dev,(char *)0x30, 0x31 );              
         printf( "ret = %08X\n", ret );
     
         printf( "4) write function call\n");
-        ret = write(dev,0x40,0x41 );
+        ret = write(dev,(char *)0x40,0x41 );
         printf( "ret = %08X\n", ret );
 
         printf( "5) ioctl function call\n");

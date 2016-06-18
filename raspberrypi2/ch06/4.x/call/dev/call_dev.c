@@ -10,7 +10,7 @@
 #define   CALL_DEV_NAME            "calldev"
 #define   CALL_DEV_MAJOR            240      
 
-int call_open (struct inode *inode, struct file *filp)
+int call_open (struct inode * inode, struct file *filp)
 {
     int num = MINOR(inode->i_rdev); 
 
@@ -21,19 +21,19 @@ int call_open (struct inode *inode, struct file *filp)
 
 loff_t call_llseek (struct file *filp, loff_t off, int whence )
 {
-    printk( "call llseek -> off : %08X, whenec : %08X\n", off, whence );
+    printk( "call llseek -> off : %08llX, whenec : %08X\n", off, whence );
     return 0x23;
 }
 
 ssize_t call_read(struct file *filp, char *buf, size_t count, loff_t *f_pos)
 {
-    printk( "call read -> buf : %08X, count : %08X \n", buf, count );
+    printk( "call read -> buf : %p, count : %08X \n", buf, count );
     return 0x33;
 }
 
 ssize_t call_write (struct file *filp, const char *buf, size_t count, loff_t *f_pos)
 {
-    printk( "call write -> buf : %08X, count : %08X \n", buf, count );
+    printk( "call write -> buf : %p, count : %08X \n", buf, count );
     return 0x43;
 }
 
@@ -45,11 +45,11 @@ ssize_t call_write (struct file *filp, const char *buf, size_t count, loff_t *f_
 long call_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
 {
 
-    printk( "call ioctl -> cmd : %08X, arg : %08X \n", cmd, arg );
+    printk( "call ioctl -> cmd : %08X, arg : %08lX \n", cmd, arg );
     return 0x53;
 }
 
-int call_release (struct inode *inode, struct file *filp)
+int call_release (struct inode * inode, struct file *filp)
 {
     printk( "call release \n" );
     return 0;
