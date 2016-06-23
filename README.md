@@ -1,4 +1,4 @@
-# it_export_linux_device_driver
+# it_expert_linux_device_driver
 
 # 라즈베리 파이2 용 소스
 ## 설명
