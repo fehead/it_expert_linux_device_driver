@@ -6,7 +6,7 @@
 
 ## 라즈베리 파이 2 패치지 설치
 ```sh
-$ sudo apt-get install build-essential git vim raspberrypi2-linux-headers
+$ sudo apt-get install build-essential git vim raspberrypi-kernel-headers
 $ mkdir ~/git
 $ cd ~/git
 $ git clone https://github.com/iamroot12CD/it_expert_linux_device_driver
