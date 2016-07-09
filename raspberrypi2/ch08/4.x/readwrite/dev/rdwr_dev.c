@@ -17,6 +17,14 @@
 #define GPFSEL1_ADDR    (GPIO_BASE + 0x04)                                      
 #define GPFSEL2_ADDR    (GPIO_BASE + 0x08)                                      
                                                                                 
+/* IAMROOT-12CD (2016-07-02):
+ * --------------------------
+ * GPIO_BASE = BCM2708_PERI_BASE + GPIO_BASE
+ *	= 0x3F000000 + 0x200000
+ *	= 0x3F200000
+ * GPFSEL1_ADDR = 0x3F200004
+ * GPFSEL2_ADDR = 0x3F200008
+ */
 #define GPSET0_ADDR     (GPIO_BASE + 0x1c)                                    
 #define GPCLR0_ADDR     (GPIO_BASE + 0x28)                                    
 #define GPLEV0_ADDR     (GPIO_BASE + 0x34)                                    
@@ -35,12 +43,22 @@ int rdwr_open (struct inode *inode, struct file *filp)
 	gpio_reg = readl( __io_address( GPFSEL1_ADDR ));                        
 	gpio_reg &= ~(0x07 << (3*7)); // 21~23 bit     
 	gpio_reg |= (0x01 << (3*7));	// output set 001
+	/* IAMROOT-12CD (2016-07-02):
+	 * --------------------------
+	 * GPFSEL1_ADDR = 0x3F200004
+	 * (*0x3F200004) = gpio_reg;
+	 */
 	writel( gpio_reg, __io_address( GPFSEL1_ADDR ));                        
 
 	// Input(GPIO 27) --> SEL2, 21~23 bit                                   
 	gpio_reg = readl( __io_address( GPFSEL2_ADDR ));                        
 	gpio_reg &= ~(0x07 << (3*7));                 
 	gpio_reg |= (0x00 << (3*7));	// input set 000
+	/* IAMROOT-12CD (2016-07-02):
+	 * --------------------------
+	 * GPFSEL2_ADDR = 0x3F200008
+	 * (*0x3F200008) = gpio_reg;
+	 */
 	writel( gpio_reg, __io_address( GPFSEL2_ADDR ));                        
 
 	printk("A4 GPFSEL1: %08x\n", readl( __io_address( GPFSEL1_ADDR )));         
