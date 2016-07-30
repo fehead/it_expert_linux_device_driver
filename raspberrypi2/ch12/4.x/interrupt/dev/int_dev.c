@@ -59,7 +59,7 @@ void int_clear( void )
 	intcount = 0;
 }
 
-irqreturn_t int_interrupt(int irq, void *dev_id, struct pt_regs *regs)
+irqreturn_t int_interrupt(int irq, void *dev_id)
 {
 	if( intcount < INT_BUFF_MAX ) {
 		intbuffer[intcount].time  = get_jiffies_64();
@@ -95,10 +95,13 @@ int int_open (struct inode *inode, struct file *filp)
 	writel( gpio_reg, __io_address( GPFSEL2_ADDR ));                        
 
 
-	if( !request_irq( gpio_to_irq(27), int_interrupt, IRQF_DISABLED | IRQF_TRIGGER_FALLING, INT_DEV_NAME, NULL) ) {
-		// 인터럽트 셋팅 27pin
-		gpio_reg = readl( __io_address( GPFEN0_ADDR ));                        
-		gpio_reg |= (1 << 27);
+	if( !request_irq( gpio_to_irq(27), int_interrupt, IRQF_TRIGGER_FALLING, INT_DEV_NAME, NULL) ) {
+		/* 인터럽트 셋팅 27pin
+		 * 27번째 핀에서 5v --> 0v로 떨어 질때 인터럽트가 발생하게 한다.
+		 * gpio_reg = readl( __io_address( GPFEN0_ADDR ));                        
+		 * gpio_reg |= (1 << 27);
+		 */
+		gpio_reg = (1 << 27);
 		writel( gpio_reg, __io_address( GPFEN0_ADDR ));                        
 	}
 
@@ -127,11 +130,9 @@ ssize_t int_read(struct file *filp, char *buf, size_t count, loff_t *f_pos)
 ssize_t int_write (struct file *filp, const char *buf, size_t count, loff_t *f_pos)
 {
 	unsigned char status;
-	int           loop;
 
 	int_clear();
 
-	unsigned char status;    
 	get_user( status, (char *) buf ); 
 	if(status == 0)
 		writel( (1 << 17), __io_address( GPCLR0_ADDR ));
@@ -143,6 +144,8 @@ ssize_t int_write (struct file *filp, const char *buf, size_t count, loff_t *f_p
 
 int int_release (struct inode *inode, struct file *filp)
 {
+	u32     gpio_reg;
+
 	// 인터럽트 unset 27pin
 	gpio_reg = readl( __io_address( GPFEN0_ADDR ));                        
 	gpio_reg &= ~(1 << 27);

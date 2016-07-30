@@ -5,6 +5,7 @@ PWD	:= $(shell pwd)
 
 default:
 	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
+	echo sudo mknod /dev/intdev c 240 0
 clean:
 	rm -rf *.ko
 	rm -rf *.mod.*
