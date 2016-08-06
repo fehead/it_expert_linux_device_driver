@@ -122,18 +122,18 @@ ssize_t blockio_read(struct file *filp, char *buf, size_t count, loff_t *f_pos)
 	int   readcount;
 	char *ptrdata;
 	int   loop;
+	ssize_t ret = 0;
 
-	if( !intcount ) {
-		if( !(filp->f_flags & O_NONBLOCK) ) {
-			cond = 0;
-			wait_event_interruptible( WaitQueue_Read, cond );
-		}
-		else
-			return -EAGAIN;
-	}
+	if( !intcount && (filp->f_flags & O_NONBLOCK) )
+		return -EAGAIN;
+
+	ret = wait_event_interruptible( WaitQueue_Read, intcount );
+	if(ret)
+		return ret;
 
 	readcount = count / sizeof( R_BLOCKIO_INFO );
-	if( readcount > intcount ) readcount = intcount;
+	if( readcount > intcount )
+		readcount = intcount;
 
 	ptrdata = (char * ) &intbuffer[0];
 
