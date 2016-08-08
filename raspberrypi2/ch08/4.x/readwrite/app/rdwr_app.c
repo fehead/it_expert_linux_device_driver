@@ -15,19 +15,19 @@ int main()
 
 	dev = open( DEVICE_FILENAME, O_RDWR|O_NDELAY );
 	if( dev >= 0 ) {
-
 		printf( "wait... input\n" );
-
 		while(1) {
 			if( read(dev,buff,1 ) == 1 ) {
 				printf( "read data [%02X]\n", buff[0] & 0xFF );
-				if( !(buff[0] & 0x10) ) break;
+				if( buff[0] == 1)
+					break;
 			}
+			sleep(1);
 		} 
 		printf( "input ok...\n");
 		printf( "led flashing...\n");
 		for( loop=0; loop<5; loop++ ) {
-			buff[0] = 0xFF; 
+			buff[0] = 0x1; 
 			write(dev,buff,1 );
 			sleep(1);
 			buff[0] = 0x00; 
